@@ -35,7 +35,7 @@ Note
 Purpose
 =======
 
-PyBN (python Bayesian Networks) is a python module for creating simple
+PyBN (Python Bayesian Networks) is a python module for creating simple
 bayesian networks structural reliability. Its flexibility and extensibility
 make it applicable to a large suite of problems. Along with the core
 functionality, PyBN includes an exprot to `GeNIe`_.
