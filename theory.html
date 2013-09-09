@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>4. Theoretical Background &mdash; PyBN 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="PyBN 1.0.1 documentation" href="index.html" />
+    <link rel="next" title="5. Bayesian Network" href="network.html" />
+    <link rel="prev" title="3. Tutorial" href="tutorial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="network.html" title="5. Bayesian Network"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="3. Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PyBN 1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="theoretical-background">
+<span id="chap-theo"></span><h1>4. Theoretical Background<a class="headerlink" href="#theoretical-background" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="bayesian-networks">
+<h2>4.1. Bayesian Networks<a class="headerlink" href="#bayesian-networks" title="Permalink to this headline">¶</a></h2>
+<p>In this section graphical models (GMs), which are the basic graphical feature
+for Bayesian networks (BNs), will be introduced. <a class="reference internal" href="references.html#jensen2007">[Jensen2007]</a> This theory is
+implemented in the Python library, Python Bayesian Networks (PyBN).</p>
+<div class="section" id="graphical-notation-and-terminology">
+<h3>4.1.1. Graphical Notation and Terminology<a class="headerlink" href="#graphical-notation-and-terminology" title="Permalink to this headline">¶</a></h3>
+<p>Graphical models (GMs) are tools used to visually illustrate and work with
+conditional independence (CI) among variables in given
+problems. <a class="reference internal" href="references.html#stephenson2000">[Stephenson2000]</a> In particular, a graph consists of a set <span class="math">\(V\)</span>
+vertices (or nodes)  and a set <span class="math">\(E\)</span> of edges (or links ). The vertices
+correspond to random variables and the edges will denote a certain
+relationship between two variables. <a class="reference internal" href="references.html#pearl2000">[Pearl2000]</a></p>
+<div class="math" id="equation-eq:2_61">
+<span class="eqno">(1)</span>\[        G := \text{graph}~ G = (V,E)\]</div>
+<p>With <span class="math">\(V = \{{X}_1,{X}_2,\dots,{X}_n\}\)</span> and <span class="math">\(E = \{({X}_i,{X}_j):i \neq j\}\)</span>.</p>
+<p>A pair of nodes <span class="math">\(X_i , X_j\)</span> can be connected by a direct edge <span class="math">\(X_i
+\to X_j\)</span> or an undirected edge <span class="math">\(X_i - X_j\)</span> . A graph is called directed
+graph if all edges are either <span class="math">\(X_i \to X_j\)</span> or <span class="math">\(X_i \leftarrow X_j\)</span> and called undirected graph if all edges are <span class="math">\(X_i - X_j\)</span> . <a class="reference internal" href="references.html#koller2009">[Koller2009]</a></p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/f-02-02-a.png"><img alt="Bayesian Network." src="_images/f-02-02-a.png" style="width: 251.5px; height: 280.0px;" /></a>
+</div>
+<p>Two variables connected by an edge are called adjacent. A path consists of a
+series of nodes, where each one is connected to the previous one by an
+edge. If a path in a graph is a sequence of edges in order that each edge has
+a directionality going in the same direction, then it is called directed
+path. For example, <span class="math">\(X_1 \to X_2 \to X_4\)</span> in the Figure above. A directed
+graph may include direct cycles when a direct part starts and ends at the same
+node, for instance <span class="math">\(X \to Y \to X\)</span>, but this includes no self-loops
+(<span class="math">\(X \to X\)</span>). A graph that contains no directed cycles is called acyclic,
+whereas a graph that is directed and acyclic is called directed acyclic graph
+(DAG) <a class="reference internal" href="references.html#pearl2000">[Pearl2000]</a>. This kind of graph is one of the central concepts which
+underlies Bayesian networks. <a class="reference internal" href="references.html#koller2009">[Koller2009]</a></p>
+<p>To denote the relationships in a graph, the terminology of kinship is used. A
+parent to child relationship in a directed graph occurs in case there is an
+edge from <span class="math">\(X_1 \to X_2\)</span> . <span class="math">\(X_1\)</span> is called the parent of
+<span class="math">\(X_2\)</span> and <span class="math">\(X_2\)</span> the child of <span class="math">\(X_1\)</span>. If <span class="math">\(X_4\)</span> is a
+child of <span class="math">\(X_2\)</span> than <span class="math">\(X_1\)</span> is its ancestor and <span class="math">\(X_4\)</span> is
+<span class="math">\(X_1\)</span> descendant. A family is the set  of vertices composed of <span class="math">\(X\)</span>
+and the parents of <span class="math">\(X_1\)</span>; for example, { <span class="math">\(X_2,X_3,X_4\)</span>} in the
+Figure. The term adjacent (or neighbor) is used to describe the relationship
+between two nodes connected in an undirected graph. <a class="reference internal" href="references.html#stephenson2000">[Stephenson2000]</a></p>
+<p>Furthermore, the notation of a forest is used to define some properties of a
+directed graph. So a forest is a DAG where each node has either one parent or
+none at all. A tree is a forest where only one node, called the root, has no
+parent. However, a node without any parents is called leaf. <a class="reference internal" href="references.html#murphy2012">[Murphy2012]</a></p>
+</div>
+</div>
+<div class="section" id="sturcture-of-bayesian-networks">
+<h2>4.2. Sturcture of Bayesian Networks<a class="headerlink" href="#sturcture-of-bayesian-networks" title="Permalink to this headline">¶</a></h2>
+<p>Formally BNs are DAG in which each node represents a random variable, or
+uncertain quantity, which can take on two or more possible values. The edges
+signify the existence of direct causal influences between linked
+variables. The strengths of these influences are quantified by conditional
+probabilities.</p>
+<p>In other words, each variable <span class="math">\(X_i\)</span> is a stochastic function of its
+parents, denoted by <span class="math">\(P( X_i | \text{pa}( X_i ))\)</span>. It is called
+conditional probability distribution (CPD), when <span class="math">\(\text{pa}( X_i )\)</span> is
+the parent set of a variable <span class="math">\(X_i\)</span>. The conjunction of these local
+estimates specifies a complete and consistent global model (joint probability
+distribution) on the basis of which all probability queries can be answered. A
+representing joint probability distribution for all variables is expressed by
+the chain rule for Bayesian networks <a class="reference internal" href="references.html#pearl1988">[Pearl1988]</a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>[Chain Rule for Bayesian Networks]</p>
+<p>Let <span class="math">\(G\)</span> be a DAG over the variables <span class="math">\(V = (X_1 , \dots , X_n
+)\)</span>. Then <span class="math">\(G\)</span> specifies a unique joint probability distribution
+<span class="math">\(P( X_1 , \dots , X_n )\)</span> given by the product of all CPDs</p>
+<div class="last math" id="equation-eq:2_62">
+<span class="eqno">(2)</span>\[        P(X_1,\dots,X_n) = \prod_{i=1}^n P(X_i|\text{pa}(X_i))\]</div>
+</div>
+<p>This process is called factorization and the individual factors
+<span class="math">\(\text{pa}( X_i )\)</span> are called CPDs or local probabilistic
+models. <a class="reference internal" href="references.html#koller2009">[Koller2009]</a> This properties are used to define a Bayesian network in
+a formal way.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>[Bayesian Network]</p>
+<p class="last">A Bayesian Network <span class="math">\(B\)</span> is a tuple <span class="math">\(B = (G , P)\)</span>, where <span class="math">\(G
+= (V , E )\)</span> is a DAG, each node <span class="math">\(X_i \in V\)</span> corresponds to a random
+variable and <span class="math">\(P\)</span> is a set of CPDs associated with <span class="math">\(G\)</span>’s
+nodes. The Bayesian Network <span class="math">\(B\)</span> defines the joint probability
+distribution <span class="math">\(P_B ( X_1 , \dots , X_n )\)</span> according to Equation
+<a href="#equation-eq:2_62">(2)</a>.</p>
+</div>
+<p>For example, is the joint probability distribution corresponding to the
+network in the Figure above given by</p>
+<div class="math" id="equation-eq:2_63">
+<span class="eqno">(3)</span>\[        P(X_1,X_2,X_3,X_4,X_5)=P(X_1)P(X_2|X_1)P(X_3|X_1)P(X_4|X_2,X_3)P(X_5|X_3)\]</div>
+<p>This structure of a BN can be used to determine the marginal probability or
+likelihood of each node holding on of its state. This procedure is called
+marginalisation.</p>
+</div>
+<div class="section" id="evidence">
+<h2>4.3. Evidence<a class="headerlink" href="#evidence" title="Permalink to this headline">¶</a></h2>
+<p>A major advantage of BNs comes by calculating new probabilities, for example,
+if new information is observed. The effects of the observation are propagated
+throughout the network and in every propagation step the probabilities of a
+different node are updated.</p>
+<p>New information in a BN are denoted as evidence and defined by a subset
+<span class="math">\(E\)</span> of random variables in the model and an instantiation <span class="math">\(e\)</span> to
+these variables.</p>
+<p>The task is to compute <span class="math">\(P( X | E = e)\)</span>, the posterior probability
+distribution over the values <span class="math">\(x\)</span> of <span class="math">\(X\)</span>, conditioned on the fact
+that <span class="math">\(E = e\)</span> . This expression can also be viewed as the marginal over
+<span class="math">\(X\)</span> in the distribution that obtains by conditioning on
+<span class="math">\(e\)</span>. <a class="reference internal" href="references.html#koller2009">[Koller2009]</a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Let <span class="math">\(B\)</span> be a Bayesian network over the variables <span class="math">\(V = ( X_1 ,
+\dots , X_n )\)</span> and <span class="math">\(e = (e_1 , \dots , e_m )\)</span> some observations. Then</p>
+<div class="math" id="equation-eq:2_64">
+<span class="eqno">(4)</span>\[        P(V,e)=\prod_{X\in V}P(X|\text{pa}(X))\cdot\prod_{i=1}^m e_i\]</div>
+<p>and for <span class="math">\(X \in V\)</span> follows</p>
+<div class="last math" id="equation-eq:2_65">
+<span class="eqno">(5)</span>\[        P(X|e)=\frac{\sum_{V\backslash X} P(V,e)}{P e}\]</div>
+</div>
+<p>If <span class="math">\(X_1\)</span> and <span class="math">\(X_2\)</span> are d-separated in a BN with evidence <span class="math">\(E
+= e\)</span> entered, then <span class="math">\(P( X_1 | X_2 , e) = P( X_1 |e)\)</span>, this means that
+<span class="math">\(X_1\)</span> and <span class="math">\(X_2\)</span> are conditional independent given <span class="math">\(E\)</span>,
+denoted <span class="math">\(P ( X_1 \perp X_2 | E)\)</span>. <a class="reference internal" href="references.html#pearl1988">[Pearl1988]</a></p>
+</div>
+<div class="section" id="network-models">
+<h2>4.4. Network Models<a class="headerlink" href="#network-models" title="Permalink to this headline">¶</a></h2>
+<p>At the core of any graphical model is a set of conditional independence
+assumptions. The aim is to understand when an independence <span class="math">\(( X_1 \perp
+X_2 | X_3 )\)</span> can be guaranteed. In other words, is it possible that
+<span class="math">\(X_1\)</span> can influence <span class="math">\(X_2\)</span> given <span class="math">\(X_3\)</span>? <a class="reference internal" href="references.html#koller2009">[Koller2009]</a></p>
+<p>Deriving these independencies for DAGs is not always easy because of the need
+to respect the orientation of the directed edges. <a class="reference internal" href="references.html#murphy2012">[Murphy2012]</a> However, a
+separability criterion, which takes the directionality of the edges in the
+graph into consideration, is called d-separation. <a class="reference internal" href="references.html#pearl1988">[Pearl1988]</a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>[d-separation]</p>
+<p>If <span class="math">\(X_1\)</span> , <span class="math">\(X_2\)</span> and <span class="math">\(X_3\)</span> are three subsets of nodes in
+a DAG <span class="math">\(G\)</span>, then <span class="math">\(X_1\)</span> and <span class="math">\(X_2\)</span> are d-separated given
+<span class="math">\(X_3\)</span>, denoted <span class="math">\(\text{d-sep}_G ( X_1 ; X_2 | X_3 )\)</span>, if there
+is no path between a node <span class="math">\(X_1\)</span> and a node <span class="math">\(X_2\)</span> along with the
+following two conditions hold:</p>
+<blockquote class="last">
+<div><ol class="arabic simple">
+<li>the connection is serial of diverging and the state of <span class="math">\(X_3\)</span> is observed, or</li>
+<li>the connection is converging and neither the state of <span class="math">\(X_3\)</span> nor
+the state of any descendant of <span class="math">\(X_3\)</span> is observed.</li>
+</ol>
+</div></blockquote>
+</div>
+<p>If a path satisfies the d-separation condition above, it is said to be active,
+otherwise it is said to be blocked by <span class="math">\(X_3\)</span>.</p>
+<p>Networks are categorized according to their configuration. The underlying
+concept can be illustrated by three simple graphs and thereby conditional
+independencies can be implemented. <a class="reference internal" href="references.html#pernkopf2013">[Pernkopf2013]</a></p>
+<div class="section" id="serial-connection">
+<h3>4.4.1. Serial Connection<a class="headerlink" href="#serial-connection" title="Permalink to this headline">¶</a></h3>
+<p>The BN illustrated in Figure below is a so called serial connection. Here
+<span class="math">\(X_1\)</span> has an influence on <span class="math">\(X_3\)</span>, which in turn has an influence on
+<span class="math">\(X_2\)</span> . Evidence about <span class="math">\(X_1\)</span> will influence the certainty of
+<span class="math">\(X_3\)</span>, which influences the certainty of <span class="math">\(X_2\)</span>, and vice versa by
+observing <span class="math">\(X_2\)</span>. However, if the state of <span class="math">\(X_3\)</span> is known, then the
+path is blocked and <span class="math">\(X_1\)</span> and <span class="math">\(X_2\)</span> become independent. Now
+<span class="math">\(X_1\)</span> and <span class="math">\(X_2\)</span> are d-separated given <span class="math">\(X_3\)</span>.
+<a class="reference internal" href="references.html#jensen2007">[Jensen2007]</a></p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/f-02-03-b.png"><img alt="Serial Connection" src="_images/f-02-03-b.png" style="width: 286.0px; height: 80.5px;" /></a>
+</div>
+</div>
+<div class="section" id="diverging-connection">
+<h3>4.4.2. Diverging Connection<a class="headerlink" href="#diverging-connection" title="Permalink to this headline">¶</a></h3>
+<p>In the Figure below, a so called diverging connection for a BN is
+illustrated. Here influence can pass between all the children of <span class="math">\(X_3\)</span> ,
+unless the state of <span class="math">\(X_3\)</span> is known. When <span class="math">\(X_3\)</span> is observed, then
+variables <span class="math">\(X_1\)</span> and <span class="math">\(X_2\)</span> are conditional independent given
+<span class="math">\(X_3\)</span>, while, when <span class="math">\(X_3\)</span> is not observed they are dependent in
+general. <a class="reference internal" href="references.html#jensen2007">[Jensen2007]</a></p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/f-02-04-b.png"><img alt="Diverging Connection" src="_images/f-02-04-b.png" style="width: 220.0px; height: 134.0px;" /></a>
+</div>
+</div>
+<div class="section" id="converging-connection">
+<h3>4.4.3. Converging Connection<a class="headerlink" href="#converging-connection" title="Permalink to this headline">¶</a></h3>
+<p>A converging connection, illustrated in the Figure below, is more
+sophisticated than the two previous cases. As far nothing is known about
+<span class="math">\(X_3\)</span> except what may be inferred from knowledge of its parents
+<span class="math">\(X_1\)</span> and <span class="math">\(X_2\)</span>, the parents are independent. This means that an
+observation of one parent cannot influence the certainties of the
+other. However, if anything is known about the common child <span class="math">\(X_3\)</span>, then
+the information on one possible cause may tell something about the other
+cause. <a class="reference internal" href="references.html#jensen2007">[Jensen2007]</a></p>
+<p>In other words, variables which are marginally independent become conditional
+dependent when a third variable is observed. <a class="reference internal" href="references.html#jordan2007">[Jordan2007]</a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This important effect is known as explaining away or Berkson&#8217;s paradox.</p>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/f-02-05-b.png"><img alt="Converging Connection" src="_images/f-02-05-b.png" style="width: 220.0px; height: 134.0px;" /></a>
+</div>
+</div>
+</div>
+<div class="section" id="dynamic-bayesian-networks">
+<h2>4.5. Dynamic Bayesian Networks<a class="headerlink" href="#dynamic-bayesian-networks" title="Permalink to this headline">¶</a></h2>
+<p>A dynamic Bayesian network (DBN) is just another way to represent stochastic
+processes using a DAG. To model domains that evolve over time, the system
+state represents the system at time <span class="math">\(t\)</span> and is an assignment of some set
+of random variables <span class="math">\(V\)</span>. Thereby the random variable <span class="math">\(X_i\)</span> itself
+is instantiated at different points in time <span class="math">\(t\)</span>, represented by
+<span class="math">\(X_i^t\)</span> and called template variable. To simplify the problem, the
+timeline is discretized into a set of time slices with a predetermined time
+interval <span class="math">\(\Delta\)</span>. This leads to a set of random variables in form of
+<span class="math">\(V^0 , V^1 , \dots , V^t , \dots , V^T\)</span> with a joint probability
+distribution <span class="math">\(P(V^0 , V^1 , \dots , V^t , \dots , V^T )\)</span> over the time
+<span class="math">\(T\)</span>, abbreviated by <span class="math">\(P(V^{0:T} )\)</span>. This distribution can be
+reparameterized. <a class="reference internal" href="references.html#koller2009">[Koller2009]</a></p>
+<div class="math" id="equation-eq:2_66">
+<span class="eqno">(6)</span>\[        P(V^{0:T}) = \prod_{t=0}^{T-1} P(V^{t+1}|V^{0:t})\]</div>
+<p>This is the product of conditional distributions, for the variables in each
+time slice are given by the previous ones.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>[Markov assumption]</p>
+<p>If the present is known, then the past has no influence on the future.</p>
+<div class="last math" id="equation-eq:2_67">
+<span class="eqno">(7)</span>\[        (V^{t+1} \perp V^{0:(t+1)}|V^{t})\]</div>
+</div>
+<p>This Markov assumption allows to define a compact representation of a DBN:</p>
+<div class="math" id="equation-eq:2_68">
+<span class="eqno">(8)</span>\[        P(V^{0},\dots,V^{T}) = \prod_{t=0}^{T-1} P(V^{t+1}|V^{t})\]</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/Logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4. Theoretical Background</a><ul>
+<li><a class="reference internal" href="#bayesian-networks">4.1. Bayesian Networks</a><ul>
+<li><a class="reference internal" href="#graphical-notation-and-terminology">4.1.1. Graphical Notation and Terminology</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sturcture-of-bayesian-networks">4.2. Sturcture of Bayesian Networks</a></li>
+<li><a class="reference internal" href="#evidence">4.3. Evidence</a></li>
+<li><a class="reference internal" href="#network-models">4.4. Network Models</a><ul>
+<li><a class="reference internal" href="#serial-connection">4.4.1. Serial Connection</a></li>
+<li><a class="reference internal" href="#diverging-connection">4.4.2. Diverging Connection</a></li>
+<li><a class="reference internal" href="#converging-connection">4.4.3. Converging Connection</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dynamic-bayesian-networks">4.5. Dynamic Bayesian Networks</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="previous chapter">3. Tutorial</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="network.html"
+                        title="next chapter">5. Bayesian Network</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/theory.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="network.html" title="5. Bayesian Network"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="3. Tutorial"
+             >previous</a> |</li>
+        <li><a href="index.html">PyBN 1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Juergen Hackl.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

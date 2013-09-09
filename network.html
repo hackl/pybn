@@ -1,0 +1,801 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>5. Bayesian Network &mdash; PyBN 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="PyBN 1.0.1 documentation" href="index.html" />
+    <link rel="next" title="6. Calculations" href="calculations.html" />
+    <link rel="prev" title="4. Theoretical Background" href="theory.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="calculations.html" title="6. Calculations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="theory.html" title="4. Theoretical Background"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PyBN 1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="bayesian-network">
+<span id="chap-network"></span><h1>5. Bayesian Network<a class="headerlink" href="#bayesian-network" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="network">
+<h2>5.1. Network<a class="headerlink" href="#network" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pybn.network.Network">
+<em class="property">class </em><tt class="descclassname">pybn.network.</tt><tt class="descname">Network</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bayesian Network</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><ul class="first last simple">
+<li>name (str): Name of the network</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pybn.network.Network.addNode">
+<tt class="descname">addNode</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Network.addNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Network.addNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add one node to the network</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>node (Node): Node element</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Network.addNodes">
+<tt class="descname">addNodes</tt><big>(</big><em>nodes</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Network.addNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Network.addNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a list of nodes to the network</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>nodes (list): A list of Node elements</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Network.computeBeliefs">
+<tt class="descname">computeBeliefs</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Network.computeBeliefs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Network.computeBeliefs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute beliefs of the network</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Network.getBeliefs">
+<tt class="descname">getBeliefs</tt><big>(</big><em>vars=None</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Network.getBeliefs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Network.getBeliefs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all beliefs of the network</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>beliefs: Return a list with all beliefs of the network.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Network.getEvidence">
+<tt class="descname">getEvidence</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Network.getEvidence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Network.getEvidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return information about the evidence</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>evidence (list): Return a list with all observed nodes. First entry is the node number, second entry the stage which is observed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Network.reset">
+<tt class="descname">reset</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Network.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Network.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset all values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Network.setEvidence">
+<tt class="descname">setEvidence</tt><big>(</big><em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Network.setEvidence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Network.setEvidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set evidence for a Node element</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>name (str): Name of the Node</li>
+<li>value (int): Number of stage which is observed. Starting with 0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Network.writeFile">
+<tt class="descname">writeFile</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Network.writeFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Network.writeFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an output file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first simple">
+<li>filename (str): Name of the outputfile, If no name is defined the name of the network will be used.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first simple">
+<li>outputfile: The output files is saved in the local folder.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><ul class="first last">
+<li><p class="first">Error: No nodes connected to the network!</p>
+</li>
+<li><p class="first">Error: Node &#8216;xy&#8217; has no outcomes!</p>
+</li>
+<li><p class="first">Error: Probabilities for &#8216;xy&#8217; doesn&#8217;t match!</p>
+<p>Len of probabilities should be a but is b</p>
+</li>
+<li><p class="first">Error: Probabilities for &#8216;xy&#8217; doesn&#8217;t sum up to 1.0!</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="node">
+<h2>5.2. Node<a class="headerlink" href="#node" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pybn.network.Node">
+<em class="property">class </em><tt class="descclassname">pybn.network.</tt><tt class="descname">Node</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Node element for the Bayesian Network</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><ul class="first last simple">
+<li>name (str): Name of the node</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pybn.network.Node.addOutcome">
+<tt class="descname">addOutcome</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.addOutcome"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.addOutcome" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add one outcome to the node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>name (str): Name of the outcome</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.addOutcomes">
+<tt class="descname">addOutcomes</tt><big>(</big><em>names</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.addOutcomes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.addOutcomes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a list of outcomes to the node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>names (list): A list of names for the outcomes</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pybn.network.Node.bar_active">
+<tt class="descname">bar_active</tt><em class="property"> = None</em><a class="headerlink" href="#pybn.network.Node.bar_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>View as Bar Chart</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Default :</th><td class="field-body"><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">False</span></tt>: i.e. GeNIe will show Icons instead Bar Charts by default</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.getBeliefs">
+<tt class="descname">getBeliefs</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.getBeliefs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.getBeliefs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns beliefs for the node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>beliefs (list): Returns a list of beliefs for the node</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.getCard">
+<tt class="descname">getCard</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.getCard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.getCard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the cardinality of the factor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>card (list): Returns a list of cardinalities corresponding to variables of the network.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.getInput">
+<tt class="descname">getInput</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.getInput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.getInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the input values for the Bayesian network</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Retunrs :</th><td class="field-body"><ul class="first last">
+<li><p class="first">var,card,val (tuple): var variables in the factor</p>
+<p>card cardinalities corresponding to var</p>
+<p>val value of the node</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.getOutcomes">
+<tt class="descname">getOutcomes</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.getOutcomes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.getOutcomes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of outcomes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>outcomes (list): Returns a list of outcomes</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.getProbabilities">
+<tt class="descname">getProbabilities</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.getProbabilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.getProbabilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of probabilities</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>probabilities (list): Returns a list of probabilities</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.getProbability">
+<tt class="descname">getProbability</tt><big>(</big><em>index</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.getProbability"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.getProbability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a single probabilitiy</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first simple">
+<li>index (int): Position in the list of probabilities</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>probabilitiy (float): Returns a single probabilitiy out of the list of probabilities</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.getTableSize">
+<tt class="descname">getTableSize</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.getTableSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.getTableSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the size of the probability table</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Retunrs :</th><td class="field-body"><ul class="first last">
+<li><p class="first">m,n (tuple): m represents the rows (number of outcomes)</p>
+<p>n represents the columns (depending from the parents and their outcomes)</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.getVal">
+<tt class="descname">getVal</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.getVal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.getVal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns values of the node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>val (list): Return a list of values for the node</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.getVar">
+<tt class="descname">getVar</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.getVar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.getVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the variables in the factor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>var (list): List of variables (nodes) in the factor</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setBarActive">
+<tt class="descname">setBarActive</tt><big>(</big><em>bar_active</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setBarActive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setBarActive" title="Permalink to this definition">¶</a></dt>
+<dd><p>View node as Icon or Bar Chart</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last">
+<li><p class="first">bar_active (boolean): <tt class="docutils literal"><span class="pre">True</span></tt> for Bar Chart view</p>
+<p><tt class="docutils literal"><span class="pre">False</span></tt> for Icon view</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setBeliefs">
+<tt class="descname">setBeliefs</tt><big>(</big><em>beliefs</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setBeliefs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setBeliefs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set beliefs for the node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>beliefs (list): List of beliefs for the node</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setCard">
+<tt class="descname">setCard</tt><big>(</big><em>card</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setCard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setCard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set cardinality of the factor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>card (list): Cardinality of the factor</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setFontColor">
+<tt class="descname">setFontColor</tt><big>(</big><em>font_color</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setFontColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setFontColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set font color</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first simple">
+<li>font_color (str): Font color given as hex string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example :</th><td class="field-body"><div class="first last highlight-python"><div class="highlight"><pre><span class="go">&gt;&gt;&gt;</span>
+<span class="go"># red: rgb(255, 0, 0) -&gt; ff0000</span>
+<span class="go">xy.setFontColor(&#39;ff0000&#39;)</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setFontName">
+<tt class="descname">setFontName</tt><big>(</big><em>font_name</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setFontName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setFontName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set font name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>font_name (str): Type of font, e.g. &#8216;Arial&#8217;, &#8216;Times New Roman&#8217;</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setFontSize">
+<tt class="descname">setFontSize</tt><big>(</big><em>font_size</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setFontSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setFontSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set font size</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>font_size (int): Size of font, e.g. 8, 12, ...</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setInteriorColor">
+<tt class="descname">setInteriorColor</tt><big>(</big><em>interior_color</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setInteriorColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setInteriorColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set interior color</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first simple">
+<li>interior_color (str): Interior color given as hex string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example :</th><td class="field-body"><div class="first last highlight-python"><div class="highlight"><pre><span class="go">&gt;&gt;&gt;</span>
+<span class="go"># red: rgb(255, 0, 0) -&gt; ff0000</span>
+<span class="go">xy.setInteriorColor(&#39;ff0000&#39;)</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setNodePosition">
+<tt class="descname">setNodePosition</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setNodePosition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setNodePosition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set position of the node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>x (int): Position in x direction</li>
+<li>y (int): Position in y direction</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setNodeSize">
+<tt class="descname">setNodeSize</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setNodeSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setNodeSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set size of the node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>x (int): Size in x direction</li>
+<li>y (int): Size in y direction</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setOutlineColor">
+<tt class="descname">setOutlineColor</tt><big>(</big><em>outline_color</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setOutlineColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setOutlineColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set outline color</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first simple">
+<li>outline_color (str): Outline color given as hex string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Example :</th><td class="field-body"><div class="first last highlight-python"><div class="highlight"><pre><span class="go">&gt;&gt;&gt;</span>
+<span class="go"># red: rgb(255, 0, 0) -&gt; ff0000</span>
+<span class="go">xy.setOutlineColor(&#39;ff0000&#39;)</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setProbabilities">
+<tt class="descname">setProbabilities</tt><big>(</big><em>probabilities</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setProbabilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setProbabilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the probabilities for the node</p>
+<p>The order of these probabilities is given by considering the state of the
+first parent of the node as the most significant coordinate, then the
+second parent, then the third (and so on), and finally considering the
+coordinate of the node itself as the least significant one.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>probabilities (list): A list of probabilities for the node</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setVal">
+<tt class="descname">setVal</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setVal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setVal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set values of the node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>val (list): List of values for the node</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.setVar">
+<tt class="descname">setVar</tt><big>(</big><em>var</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.setVar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.setVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set variables in the factor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>var (list): List of variables (nodes) in the factor</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pybn.network.Node.transformProbabilities">
+<tt class="descname">transformProbabilities</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Node.transformProbabilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Node.transformProbabilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the probabilities for the node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>probabilities (list): Returns a list of transformed probabilities</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="arc">
+<h2>5.3. Arc<a class="headerlink" href="#arc" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pybn.network.Arc">
+<em class="property">class </em><tt class="descclassname">pybn.network.</tt><tt class="descname">Arc</tt><big>(</big><em>from_node</em>, <em>to_node</em><big>)</big><a class="reference internal" href="_modules/pybn/network.html#Arc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.network.Arc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Arc between two nodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><ul class="first last simple">
+<li>from_node (Node): Node where the arc starts</li>
+<li>to_node (Node): Node where the arc points</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/Logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5. Bayesian Network</a><ul>
+<li><a class="reference internal" href="#network">5.1. Network</a></li>
+<li><a class="reference internal" href="#node">5.2. Node</a></li>
+<li><a class="reference internal" href="#arc">5.3. Arc</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="theory.html"
+                        title="previous chapter">4. Theoretical Background</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="calculations.html"
+                        title="next chapter">6. Calculations</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/network.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="calculations.html" title="6. Calculations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="theory.html" title="4. Theoretical Background"
+             >previous</a> |</li>
+        <li><a href="index.html">PyBN 1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Juergen Hackl.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

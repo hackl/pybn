@@ -1,0 +1,728 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pybn.network &mdash; PyBN 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="PyBN 1.0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../index.html">PyBN 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pybn.network</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python -tt</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">operations</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">mul</span>
+
+<div class="viewcode-block" id="Network"><a class="viewcode-back" href="../../network.html#pybn.network.Network">[docs]</a><span class="k">class</span> <span class="nc">Network</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Bayesian Network</span>
+
+<span class="sd">  :Attributes:</span>
+<span class="sd">    - name (str): Name of the network</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">repEmptySpace</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">evidence</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">marginal</span> <span class="o">=</span> <span class="bp">None</span>
+
+  <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+<div class="viewcode-block" id="Network.addNode"><a class="viewcode-back" href="../../network.html#pybn.network.Network.addNode">[docs]</a>  <span class="k">def</span> <span class="nf">addNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add one node to the network</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - node (Node): Node element</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Network.addNodes"><a class="viewcode-back" href="../../network.html#pybn.network.Network.addNodes">[docs]</a>  <span class="k">def</span> <span class="nf">addNodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">nodes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a list of nodes to the network</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - nodes (list): A list of Node elements</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">addNode</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Network.setEvidence"><a class="viewcode-back" href="../../network.html#pybn.network.Network.setEvidence">[docs]</a>  <span class="k">def</span> <span class="nf">setEvidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set evidence for a Node element</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - name (str): Name of the Node</span>
+<span class="sd">      - value (int): Number of stage which is observed. Starting with 0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)):</span>
+      <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">getIdNum</span><span class="p">()</span>
+        <span class="n">outcomes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">getOutcomes</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+          <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">outcomes</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="n">outcomes</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+              <span class="n">val</span> <span class="o">=</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+          <span class="n">val</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evidence</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">var</span><span class="p">,</span><span class="n">val</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="Network.getEvidence"><a class="viewcode-back" href="../../network.html#pybn.network.Network.getEvidence">[docs]</a>  <span class="k">def</span> <span class="nf">getEvidence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return information about the evidence</span>
+
+<span class="sd">    :Returns:</span>
+<span class="sd">      - evidence (list): Return a list with all observed nodes. First entry is the node number, second entry the stage which is observed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">evidence</span> <span class="o">==</span> <span class="p">[]:</span>
+      <span class="n">evidence</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">evidence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evidence</span>
+    <span class="k">return</span> <span class="n">evidence</span>
+</div>
+<div class="viewcode-block" id="Network.reset"><a class="viewcode-back" href="../../network.html#pybn.network.Network.reset">[docs]</a>  <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reset all values&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">evidence</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">marginal</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setBeliefs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">getProbabilities</span><span class="p">())</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setCard</span><span class="p">([])</span>
+      <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">getVar</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">getArcConnectionId</span><span class="p">())</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setVar</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setVal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transformProbabilities</span><span class="p">())</span>
+</div>
+<div class="viewcode-block" id="Network.computeBeliefs"><a class="viewcode-back" href="../../network.html#pybn.network.Network.computeBeliefs">[docs]</a>  <span class="k">def</span> <span class="nf">computeBeliefs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute beliefs of the network&quot;&quot;&quot;</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">factors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">marginal</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)):</span>
+      <span class="n">factor</span> <span class="o">=</span> <span class="n">Factor</span><span class="p">()</span>
+      <span class="n">order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">getIdNum</span><span class="p">())</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">setVal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">transformProbabilities</span><span class="p">())</span>
+      <span class="n">var</span><span class="p">,</span> <span class="n">card</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">getInput</span><span class="p">()</span>
+      <span class="n">factor</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">var</span><span class="p">,</span><span class="n">card</span><span class="p">,</span><span class="n">val</span><span class="p">)</span>
+      <span class="n">factors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">factor</span><span class="p">)</span>
+
+    <span class="n">evidence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getEvidence</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">factor</span> <span class="ow">in</span> <span class="n">factors</span><span class="p">:</span>
+      <span class="n">subfactors</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="n">suborder</span> <span class="o">=</span> <span class="n">factor</span><span class="o">.</span><span class="n">var</span>
+      <span class="k">for</span> <span class="n">idNum</span> <span class="ow">in</span> <span class="n">suborder</span><span class="p">:</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">idNum</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">subfactor</span> <span class="o">=</span> <span class="n">Factor</span><span class="p">()</span>
+        <span class="n">var</span><span class="p">,</span> <span class="n">card</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">getInput</span><span class="p">()</span>
+
+        <span class="n">subfactor</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">var</span><span class="p">,</span><span class="n">card</span><span class="p">,</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">subfactors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subfactor</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">suborder</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">ComputeMarginal</span><span class="p">(</span><span class="n">suborder</span><span class="p">,</span> <span class="n">subfactors</span><span class="p">,</span> <span class="n">evidence</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">idNum</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">suborder</span><span class="p">):</span>
+          <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">idNum</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+          <span class="n">beliefs</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">val</span>
+          <span class="n">card</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">card</span>
+          <span class="n">var</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">var</span>
+          <span class="n">node</span><span class="o">.</span><span class="n">setBeliefs</span><span class="p">(</span><span class="n">beliefs</span><span class="p">)</span>
+          <span class="n">node</span><span class="o">.</span><span class="n">setCard</span><span class="p">(</span><span class="n">card</span><span class="p">)</span>
+          <span class="n">node</span><span class="o">.</span><span class="n">setVar</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+          <span class="n">node</span><span class="o">.</span><span class="n">setVal</span><span class="p">(</span><span class="n">beliefs</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Network.getBeliefs"><a class="viewcode-back" href="../../network.html#pybn.network.Network.getBeliefs">[docs]</a>  <span class="k">def</span> <span class="nf">getBeliefs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">vars</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns all beliefs of the network</span>
+
+<span class="sd">    :Returns:</span>
+<span class="sd">      - beliefs: Return a list with all beliefs of the network.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">beliefs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">vars</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">marginal</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">vars</span><span class="p">)):</span>
+          <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">marginal</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">vars</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+            <span class="n">beliefs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">marginal</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">marginal</span><span class="p">)):</span>
+        <span class="n">beliefs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">marginal</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">beliefs</span>
+
+</div>
+<div class="viewcode-block" id="Network.writeFile"><a class="viewcode-back" href="../../network.html#pybn.network.Network.writeFile">[docs]</a>  <span class="k">def</span> <span class="nf">writeFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write an output file</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - filename (str): Name of the outputfile, If no name is defined the name of the network will be used.</span>
+
+<span class="sd">    :Returns:</span>
+<span class="sd">      - outputfile: The output files is saved in the local folder.</span>
+
+<span class="sd">    :Raises:</span>
+<span class="sd">      - Error: No nodes connected to the network!</span>
+<span class="sd">      - Error: Node &#39;xy&#39; has no outcomes!</span>
+<span class="sd">      - Error: Probabilities for &#39;xy&#39; doesn&#39;t match!\n</span>
+<span class="sd">        Len of probabilities should be a but is b</span>
+<span class="sd">      - Error: Probabilities for &#39;xy&#39; doesn&#39;t sum up to 1.0!</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">checkInput</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+      <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s">&#39;.xdsl&#39;</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">writeHeader</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+      <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">printNode</span><span class="p">())</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">writeBody</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+      <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">printExtension</span><span class="p">())</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">writeFooter</span><span class="p">())</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</div>
+  <span class="k">def</span> <span class="nf">writeHeader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span>
+              <span class="s">&#39;&lt;smile version=&quot;1.0&quot; id=&quot;&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s">&#39;&quot; numsamples=&quot;1000&quot; discsamples=&quot;10000&quot;&gt;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span>
+              <span class="s">&#39;</span><span class="se">\t</span><span class="s">&lt;nodes&gt;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">header</span>
+
+  <span class="k">def</span> <span class="nf">writeBody</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&lt;/nodes&gt;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&lt;extensions&gt;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span><span class="s">&#39;</span><span class="se">\t\t</span><span class="s">&lt;genie version=&quot;1.0&quot; app=&quot;py2GeNIe 2013&quot; name=&quot;&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s">&#39;&quot; faultnameformat=&quot;nodestate&quot;&gt;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">body</span>
+
+  <span class="k">def</span> <span class="nf">writeFooter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">footer</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;</span><span class="se">\t\t</span><span class="s">&lt;/genie&gt;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&lt;/extensions&gt;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span><span class="s">&#39;&lt;/smile&gt;&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">footer</span>
+
+  <span class="k">def</span> <span class="nf">checkInput</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">==</span> <span class="p">[]:</span>
+      <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s">&quot;Error: No nodes connected to the network!&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">getOutcomes</span><span class="p">()</span> <span class="o">==</span> <span class="p">[]:</span>
+          <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s">&quot;Error: Node &#39;&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;&#39; has no outcomes!&quot;</span><span class="p">)</span>
+        <span class="n">m</span><span class="p">,</span><span class="n">n</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">getTableSize</span><span class="p">()</span>
+        <span class="n">nodeLen</span> <span class="o">=</span> <span class="n">m</span><span class="o">*</span><span class="n">n</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">getProbabilities</span><span class="p">())</span> <span class="o">!=</span> <span class="n">nodeLen</span><span class="p">:</span>
+          <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s">&quot;Error: Probabilities for &#39;&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;&#39; doesn&#39;t match!</span><span class="se">\n</span><span class="s">       Len of probabilities should be &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">nodeLen</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; but is &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">getProbabilities</span><span class="p">())))</span>
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">getProbabilities</span><span class="p">())</span> <span class="o">!=</span> <span class="n">n</span><span class="p">:</span>
+          <span class="k">print</span> <span class="s">&quot;Error: Probabilities for &#39;&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;&#39; doesn&#39;t sum up to 1.0!&quot;</span>
+          <span class="c">#sys.exit(&quot;Error: Probabilities for &#39;&quot;+str(node)+&quot;&#39; doesn&#39;t sum up to 1.0!&quot;)</span>
+
+</div>
+<div class="viewcode-block" id="Node"><a class="viewcode-back" href="../../network.html#pybn.network.Node">[docs]</a><span class="k">class</span> <span class="nc">Node</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Node element for the Bayesian Network</span>
+
+<span class="sd">  :Attributes:</span>
+<span class="sd">    - name (str): Name of the node</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">nextIdNum</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">repEmptySpace</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">caption</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">idNum</span> <span class="o">=</span> <span class="n">Node</span><span class="o">.</span><span class="n">nextIdNum</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">nodeId</span> <span class="o">=</span> <span class="s">&#39;Node_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idNum</span><span class="p">)</span>
+    <span class="n">Node</span><span class="o">.</span><span class="n">nextIdNum</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">outcomes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">probabilities</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">nextIdOut</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">card</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idNum</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">beliefs</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">interior_color</span> <span class="o">=</span> <span class="s">&#39;e5f6f7&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">outline_color</span> <span class="o">=</span> <span class="s">&#39;0000bb&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">font_color</span> <span class="o">=</span> <span class="s">&#39;000000&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">font_name</span> <span class="o">=</span> <span class="s">&#39;Arial&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">font_size</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">node_size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">125</span><span class="p">,</span><span class="mi">65</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">node_position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">125</span><span class="p">,</span><span class="mi">65</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">bar_active</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="sd">&quot;&quot;&quot;View as Bar Chart</span>
+
+<span class="sd">    :Default:</span>
+<span class="sd">      - ``False``: i.e. GeNIe will show Icons instead Bar Charts by default</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+  <span class="k">def</span> <span class="nf">getIdNum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">idNum</span>
+
+  <span class="k">def</span> <span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+<div class="viewcode-block" id="Node.setCard"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setCard">[docs]</a>  <span class="k">def</span> <span class="nf">setCard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">card</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set cardinality of the factor</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - card (list): Cardinality of the factor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">card</span> <span class="o">=</span> <span class="n">card</span>
+</div>
+  <span class="k">def</span> <span class="nf">getCard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the cardinality of the factor</span>
+
+<span class="sd">    :Returns:</span>
+<span class="sd">      - card (list): Returns a list of cardinalities corresponding to variables of the network.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">card</span>
+
+<div class="viewcode-block" id="Node.setVar"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setVar">[docs]</a>  <span class="k">def</span> <span class="nf">setVar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">var</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set variables in the factor</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - var (list): List of variables (nodes) in the factor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="n">var</span>
+</div>
+<div class="viewcode-block" id="Node.getVar"><a class="viewcode-back" href="../../network.html#pybn.network.Node.getVar">[docs]</a>  <span class="k">def</span> <span class="nf">getVar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the variables in the factor</span>
+
+<span class="sd">    :Returns:</span>
+<span class="sd">      - var (list): List of variables (nodes) in the factor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">var</span>
+</div>
+<div class="viewcode-block" id="Node.setVal"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setVal">[docs]</a>  <span class="k">def</span> <span class="nf">setVal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">val</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set values of the node</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - val (list): List of values for the node</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+</div>
+<div class="viewcode-block" id="Node.getVal"><a class="viewcode-back" href="../../network.html#pybn.network.Node.getVal">[docs]</a>  <span class="k">def</span> <span class="nf">getVal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns values of the node</span>
+
+<span class="sd">    :Returns:</span>
+<span class="sd">      - val (list): Return a list of values for the node</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+</div>
+<div class="viewcode-block" id="Node.setBeliefs"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setBeliefs">[docs]</a>  <span class="k">def</span> <span class="nf">setBeliefs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">beliefs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set beliefs for the node</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - beliefs (list): List of beliefs for the node</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">beliefs</span> <span class="o">=</span> <span class="n">beliefs</span>
+</div>
+<div class="viewcode-block" id="Node.getBeliefs"><a class="viewcode-back" href="../../network.html#pybn.network.Node.getBeliefs">[docs]</a>  <span class="k">def</span> <span class="nf">getBeliefs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns beliefs for the node</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - beliefs (list): Returns a list of beliefs for the node</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">beliefs</span>
+</div>
+<div class="viewcode-block" id="Node.addOutcome"><a class="viewcode-back" href="../../network.html#pybn.network.Node.addOutcome">[docs]</a>  <span class="k">def</span> <span class="nf">addOutcome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add one outcome to the node</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - name (str): Name of the outcome</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">outcomes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">repEmptySpace</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Node.addOutcomes"><a class="viewcode-back" href="../../network.html#pybn.network.Node.addOutcomes">[docs]</a>  <span class="k">def</span> <span class="nf">addOutcomes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">names</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a list of outcomes to the node</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - names (list): A list of names for the outcomes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">outcomes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">repEmptySpace</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Node.getOutcomes"><a class="viewcode-back" href="../../network.html#pybn.network.Node.getOutcomes">[docs]</a>  <span class="k">def</span> <span class="nf">getOutcomes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of outcomes</span>
+
+<span class="sd">    :Returns:</span>
+<span class="sd">      - outcomes (list): Returns a list of outcomes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcomes</span>
+</div>
+<div class="viewcode-block" id="Node.setProbabilities"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setProbabilities">[docs]</a>  <span class="k">def</span> <span class="nf">setProbabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">probabilities</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set the probabilities for the node</span>
+
+<span class="sd">    The order of these probabilities is given by considering the state of the</span>
+<span class="sd">    first parent of the node as the most significant coordinate, then the</span>
+<span class="sd">    second parent, then the third (and so on), and finally considering the</span>
+<span class="sd">    coordinate of the node itself as the least significant one.</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - probabilities (list): A list of probabilities for the node</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">probabilities</span> <span class="o">=</span> <span class="n">probabilities</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformProbabilities</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">beliefs</span> <span class="o">=</span> <span class="n">probabilities</span>
+</div>
+<div class="viewcode-block" id="Node.transformProbabilities"><a class="viewcode-back" href="../../network.html#pybn.network.Node.transformProbabilities">[docs]</a>  <span class="k">def</span> <span class="nf">transformProbabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Transform the probabilities for the node</span>
+
+<span class="sd">    :Returns:</span>
+<span class="sd">      - probabilities (list): Returns a list of transformed probabilities</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">card</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getCard</span><span class="p">()</span>
+    <span class="n">probabilities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">probabilities</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">card</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="n">card</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">card</span><span class="p">),</span> <span class="n">card</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+      <span class="n">assignment</span> <span class="o">=</span> <span class="n">IndexToAssignment</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">card</span><span class="p">)),</span><span class="n">card</span><span class="p">)</span>
+      <span class="n">assignment</span> <span class="o">=</span> <span class="n">assignment</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">card</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">assignment</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+      <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">assignment</span><span class="p">):</span>
+        <span class="n">item</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">probabilities</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+      <span class="n">assignment</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">card</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">card</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">assignment</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+      <span class="n">probabilities</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">assignment</span><span class="p">:</span>
+        <span class="n">probabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">probabilities</span>
+</div>
+<div class="viewcode-block" id="Node.getProbabilities"><a class="viewcode-back" href="../../network.html#pybn.network.Node.getProbabilities">[docs]</a>  <span class="k">def</span> <span class="nf">getProbabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of probabilities</span>
+
+<span class="sd">    :Returns:</span>
+<span class="sd">      - probabilities (list): Returns a list of probabilities</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">probabilities</span>
+</div>
+<div class="viewcode-block" id="Node.getProbability"><a class="viewcode-back" href="../../network.html#pybn.network.Node.getProbability">[docs]</a>  <span class="k">def</span> <span class="nf">getProbability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">index</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a single probabilitiy</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - index (int): Position in the list of probabilities</span>
+
+<span class="sd">    :Returns:</span>
+<span class="sd">      - probabilitiy (float): Returns a single probabilitiy out of the list of probabilities</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">probabilities</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+</div>
+  <span class="k">def</span> <span class="nf">getArcConnection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span>
+
+  <span class="k">def</span> <span class="nf">getArcConnectionId</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span><span class="p">)):</span>
+      <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">ids</span>
+
+  <span class="k">def</span> <span class="nf">addArcConnection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">size</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">name</span><span class="p">,</span><span class="nb">id</span><span class="p">,</span><span class="n">size</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Node.getTableSize"><a class="viewcode-back" href="../../network.html#pybn.network.Node.getTableSize">[docs]</a>  <span class="k">def</span> <span class="nf">getTableSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the size of the probability table</span>
+
+<span class="sd">    :Retunrs:</span>
+<span class="sd">     - m,n (tuple): m represents the rows (number of outcomes)\n</span>
+<span class="sd">       n represents the columns (depending from the parents and their outcomes)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span> <span class="o">==</span> <span class="p">[]:</span>
+      <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getSize</span><span class="p">(),</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span><span class="p">)):</span>
+        <span class="n">n</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+      <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getSize</span><span class="p">(),</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">size</span>
+</div>
+<div class="viewcode-block" id="Node.getCard"><a class="viewcode-back" href="../../network.html#pybn.network.Node.getCard">[docs]</a>  <span class="k">def</span> <span class="nf">getCard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the cardinality of the factor</span>
+
+<span class="sd">    :Returns:</span>
+<span class="sd">      - card (list): Returns a list of cardinalities corresponding to variables of the network.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">card</span> <span class="o">==</span> <span class="p">[]:</span>
+      <span class="n">card</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span> <span class="o">==</span> <span class="p">[]:</span>
+        <span class="n">card</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getSize</span><span class="p">())</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">card</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getSize</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span><span class="p">)):</span>
+          <span class="n">card</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">card</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">card</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">card</span>
+</div>
+<div class="viewcode-block" id="Node.getInput"><a class="viewcode-back" href="../../network.html#pybn.network.Node.getInput">[docs]</a>  <span class="k">def</span> <span class="nf">getInput</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the input values for the Bayesian network</span>
+
+<span class="sd">    :Retunrs:</span>
+<span class="sd">     - var,card,val (tuple): var variables in the factor\n</span>
+<span class="sd">       card cardinalities corresponding to var\n</span>
+<span class="sd">       val value of the node</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">card</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getCard</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="p">,</span> <span class="n">card</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+</div>
+  <span class="k">def</span> <span class="nf">getTable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tableSize</span>
+
+  <span class="k">def</span> <span class="nf">getSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outcomes</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">printNode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c"># print node</span>
+    <span class="n">commentNode</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t</span><span class="s">&lt;!-- create node &quot;&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">caption</span><span class="o">+</span><span class="s">&#39;&quot; --&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">initNode</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t</span><span class="s">&lt;cpt id=&quot;&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s">&#39;&quot; &gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">commentOutcomes</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t</span><span class="s">&lt;!-- setting names of outcomes --&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">initOutcomes</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">outcomes</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcomes</span><span class="p">:</span>
+      <span class="n">initOutcomes</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\t\t\t</span><span class="s">&lt;state id=&quot;&#39;</span><span class="o">+</span><span class="n">outcomes</span><span class="o">+</span><span class="s">&#39;&quot; /&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span> <span class="o">!=</span> <span class="p">[]:</span>
+      <span class="c"># print arc</span>
+      <span class="n">commentArc</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t</span><span class="s">&lt;!-- add arcs --&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+      <span class="n">initArc</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t</span><span class="s">&lt;parents&gt;&#39;</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span><span class="p">)):</span>
+        <span class="n">initArc</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arcConnection</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s">&#39; &#39;</span>
+      <span class="n">endArc</span> <span class="o">=</span>  <span class="s">&#39;&lt;/parents&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">commentArc</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+      <span class="n">initArc</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+      <span class="n">endArc</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+
+    <span class="c"># print probabilities</span>
+    <span class="n">commentProbabilities</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t</span><span class="s">&lt;!-- setting probabilities --&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">initProbabilities</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t</span><span class="s">&lt;probabilities&gt;&#39;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">probability</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">probabilities</span><span class="p">):</span>
+      <span class="n">initProbabilities</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">probability</span><span class="p">)</span><span class="o">+</span><span class="s">&#39; &#39;</span>
+    <span class="n">endProbabilities</span> <span class="o">=</span> <span class="s">&#39;&lt;/probabilities&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">endNode</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t</span><span class="s">&lt;/cpt&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">print_node</span> <span class="o">=</span>  <span class="n">commentNode</span><span class="o">+</span><span class="n">initNode</span><span class="o">+</span><span class="n">commentOutcomes</span><span class="o">+</span><span class="n">initOutcomes</span><span class="o">+</span><span class="n">commentArc</span><span class="o">+</span><span class="n">initArc</span><span class="o">+</span><span class="n">endArc</span><span class="o">+</span><span class="n">commentProbabilities</span><span class="o">+</span><span class="n">initProbabilities</span><span class="o">+</span><span class="n">endProbabilities</span><span class="o">+</span><span class="n">endNode</span>
+    <span class="k">return</span> <span class="n">print_node</span>
+
+  <span class="k">def</span> <span class="nf">printExtension</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">initExtensions</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t</span><span class="s">&lt;node id=&quot;&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s">&#39;&quot;&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">initName</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t\t</span><span class="s">&lt;name&gt;&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">caption</span><span class="o">+</span><span class="s">&#39;&lt;/name&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">initIcolor</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t\t</span><span class="s">&lt;interior color=&quot;&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">interior_color</span><span class="o">+</span><span class="s">&#39;&quot; /&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">initOcolor</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t\t</span><span class="s">&lt;outline color=&quot;&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">outline_color</span><span class="o">+</span><span class="s">&#39;&quot; /&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">initFont</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t\t</span><span class="s">&lt;font color=&quot;&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">font_color</span><span class="o">+</span><span class="s">&#39;&quot; name=&quot;&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">font_name</span><span class="o">+</span><span class="s">&#39;&quot; size=&quot;&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">font_size</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;&quot; /&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">initPos</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t\t</span><span class="s">&lt;position&gt;&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_position</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="s">&#39; &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_position</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="s">&#39; &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_position</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">+</span><span class="s">&#39; &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_position</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">+</span><span class="s">&#39;&lt;/position&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">initBar</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar_active</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+      <span class="n">initBar</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t\t</span><span class="s">&lt;barchart active=&quot;true&quot; width=&quot;&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_size</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">+</span><span class="s">&#39;&quot; height=&quot;&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_size</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">+</span><span class="s">&#39;&quot; /&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">endExtensions</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\t\t\t</span><span class="s">&lt;/node&gt;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="k">return</span> <span class="n">initExtensions</span><span class="o">+</span><span class="n">initName</span><span class="o">+</span><span class="n">initIcolor</span><span class="o">+</span><span class="n">initOcolor</span><span class="o">+</span><span class="n">initFont</span><span class="o">+</span><span class="n">initPos</span><span class="o">+</span><span class="n">initBar</span><span class="o">+</span><span class="n">endExtensions</span>
+
+  <span class="k">def</span> <span class="nf">printProbabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">commentProbabilities</span> <span class="o">=</span> <span class="s">&#39;// setting probabilities for &quot;&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s">&#39;&quot;</span><span class="se">\n</span><span class="s">theProbs.Flush();</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">initProbabilities</span> <span class="o">=</span> <span class="s">&#39;theProbs.SetSize(&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">probability</span><span class="p">))</span><span class="o">+</span><span class="s">&#39;);</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">probability</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">probability</span><span class="p">):</span>
+      <span class="n">initProbabilities</span> <span class="o">+=</span> <span class="s">&#39;theProbs[&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;] = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">probability</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;;</span><span class="se">\n</span><span class="s">&#39;</span>
+    <span class="n">endProbabilities</span> <span class="o">=</span> <span class="s">&#39;theNet.GetNode(&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">nodeId</span><span class="o">+</span><span class="s">&#39;)-&gt;Definition()-&gt;SetDefinition(theProbs);</span><span class="se">\n\n</span><span class="s">&#39;</span>
+    <span class="n">print_prob</span> <span class="o">=</span> <span class="n">commentProbabilities</span><span class="o">+</span><span class="n">initProbabilities</span><span class="o">+</span><span class="n">endProbabilities</span>
+    <span class="k">return</span> <span class="n">print_prob</span>
+
+  <span class="k">def</span> <span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+  <span class="k">def</span> <span class="nf">getNodeId</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodeId</span>
+
+<div class="viewcode-block" id="Node.setInteriorColor"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setInteriorColor">[docs]</a>  <span class="k">def</span> <span class="nf">setInteriorColor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">interior_color</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set interior color</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - interior_color (str): Interior color given as hex string</span>
+
+<span class="sd">    :Example:</span>
+<span class="sd">       &gt;&gt;&gt;</span>
+<span class="sd">       # red: rgb(255, 0, 0) -&gt; ff0000</span>
+<span class="sd">       xy.setInteriorColor(&#39;ff0000&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">interior_color</span> <span class="o">=</span> <span class="n">interior_color</span>
+</div>
+<div class="viewcode-block" id="Node.setOutlineColor"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setOutlineColor">[docs]</a>  <span class="k">def</span> <span class="nf">setOutlineColor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">outline_color</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set outline color</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - outline_color (str): Outline color given as hex string</span>
+
+<span class="sd">    :Example:</span>
+<span class="sd">       &gt;&gt;&gt;</span>
+<span class="sd">       # red: rgb(255, 0, 0) -&gt; ff0000</span>
+<span class="sd">       xy.setOutlineColor(&#39;ff0000&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">outline_color</span> <span class="o">=</span> <span class="n">outline_color</span>
+</div>
+<div class="viewcode-block" id="Node.setFontColor"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setFontColor">[docs]</a>  <span class="k">def</span> <span class="nf">setFontColor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">font_color</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set font color</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - font_color (str): Font color given as hex string</span>
+
+<span class="sd">    :Example:</span>
+<span class="sd">       &gt;&gt;&gt;</span>
+<span class="sd">       # red: rgb(255, 0, 0) -&gt; ff0000</span>
+<span class="sd">       xy.setFontColor(&#39;ff0000&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">font_color</span> <span class="o">=</span> <span class="n">font_color</span>
+</div>
+<div class="viewcode-block" id="Node.setFontName"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setFontName">[docs]</a>  <span class="k">def</span> <span class="nf">setFontName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">font_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set font name</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - font_name (str): Type of font, e.g. &#39;Arial&#39;, &#39;Times New Roman&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">font_name</span> <span class="o">=</span> <span class="n">font_name</span>
+</div>
+<div class="viewcode-block" id="Node.setFontSize"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setFontSize">[docs]</a>  <span class="k">def</span> <span class="nf">setFontSize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">font_size</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set font size</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - font_size (int): Size of font, e.g. 8, 12, ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">font_size</span> <span class="o">=</span> <span class="n">font_size</span>
+</div>
+<div class="viewcode-block" id="Node.setNodeSize"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setNodeSize">[docs]</a>  <span class="k">def</span> <span class="nf">setNodeSize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set size of the node</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - x (int): Size in x direction</span>
+<span class="sd">      - y (int): Size in y direction</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">node_size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">node_size</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+</div>
+<div class="viewcode-block" id="Node.setNodePosition"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setNodePosition">[docs]</a>  <span class="k">def</span> <span class="nf">setNodePosition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set position of the node</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - x (int): Position in x direction</span>
+<span class="sd">      - y (int): Position in y direction</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">node_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">node_position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">node_position</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">node_size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">node_position</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">node_size</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+</div>
+  <span class="k">def</span> <span class="nf">getNodePosition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_position</span>
+
+<div class="viewcode-block" id="Node.setBarActive"><a class="viewcode-back" href="../../network.html#pybn.network.Node.setBarActive">[docs]</a>  <span class="k">def</span> <span class="nf">setBarActive</span><span class="p">(</span><span class="n">bar_active</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;View node as Icon or Bar Chart</span>
+
+<span class="sd">    :Args:</span>
+<span class="sd">      - bar_active (boolean): ``True`` for Bar Chart view\n</span>
+<span class="sd">        ``False`` for Icon view</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">bar_active</span> <span class="o">=</span> <span class="n">bar_active</span>
+</div></div>
+<div class="viewcode-block" id="Arc"><a class="viewcode-back" href="../../network.html#pybn.network.Arc">[docs]</a><span class="k">class</span> <span class="nc">Arc</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Arc between two nodes</span>
+
+<span class="sd">  :Attributes:</span>
+<span class="sd">    - from_node (Node): Node where the arc starts</span>
+<span class="sd">    - to_node (Node): Node where the arc points</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_node</span><span class="p">,</span> <span class="n">to_node</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">from_node</span> <span class="o">=</span> <span class="n">from_node</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">to_node</span> <span class="o">=</span> <span class="n">to_node</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">to_node</span><span class="o">.</span><span class="n">addArcConnection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">from_node</span><span class="o">.</span><span class="n">getName</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">from_node</span><span class="o">.</span><span class="n">getIdNum</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">from_node</span><span class="o">.</span><span class="n">getSize</span><span class="p">())</span>
+
+  <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+</div>
+<span class="k">def</span> <span class="nf">repEmptySpace</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">,</span> <span class="s">&#39;_&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">chunks</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; Yield successive n-sized chunks from l.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">),</span> <span class="n">n</span><span class="p">):</span>
+    <span class="k">yield</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">n</span><span class="p">]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/Logo.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../../index.html">PyBN 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Juergen Hackl.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

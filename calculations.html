@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>6. Calculations &mdash; PyBN 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="PyBN 1.0.1 documentation" href="index.html" />
+    <link rel="next" title="7. List of References" href="references.html" />
+    <link rel="prev" title="5. Bayesian Network" href="network.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="references.html" title="7. List of References"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="network.html" title="5. Bayesian Network"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PyBN 1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="calculations">
+<span id="chap-calculations"></span><h1>6. Calculations<a class="headerlink" href="#calculations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="factor">
+<h2>6.1. Factor<a class="headerlink" href="#factor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pybn.operations.Factor">
+<em class="property">class </em><tt class="descclassname">pybn.operations.</tt><tt class="descname">Factor</tt><a class="reference internal" href="_modules/pybn/operations.html#Factor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.operations.Factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factor</p>
+<p>Factors are used to represent the CPDs in the Bayesian network. As such, the
+core functionality, which are implemented, are the factor product, factor
+marginalization and factor reduction operations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes :</th><td class="field-body"><ul class="first last simple">
+<li>name (str): Name of the factor</li>
+<li>var (list): List of variables in the factor, e.g. [1 2 3]</li>
+<li>card (list): List of cardinalities corresponding to .var, e.g. [2 2 2]</li>
+<li>val (list): Value table of size prod(card)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<div class="section" id="factor-product">
+<h3>6.1.1. Factor Product<a class="headerlink" href="#factor-product" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pybn.operations.FactorProduct">
+<em class="property">class </em><tt class="descclassname">pybn.operations.</tt><tt class="descname">FactorProduct</tt><a class="reference internal" href="_modules/pybn/operations.html#FactorProduct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.operations.FactorProduct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factor Product Computes the product of two factors.</p>
+<p><tt class="docutils literal"><span class="pre">C.FactorProduct(A,B)</span></tt> computes the product between two factors, A and B,
+where each factor is defined over a set of variables with given dimension.
+The factor data structure has the following fields:</p>
+<blockquote>
+<div><ul class="simple">
+<li>.var    Vector of variables in the factor, e.g. [1 2 3]</li>
+<li>.card   Vector of cardinalities corresponding to .var, e.g. [2 2 2]</li>
+<li>.val    Value table of size prod(.card)</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first simple">
+<li>A (Factor): Factor A</li>
+<li>B (Factor): Factor B</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>C (Factor): Return factor C</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="factor-marginalization">
+<h3>6.1.2. Factor Marginalization<a class="headerlink" href="#factor-marginalization" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pybn.operations.FactorMarginalization">
+<em class="property">class </em><tt class="descclassname">pybn.operations.</tt><tt class="descname">FactorMarginalization</tt><a class="reference internal" href="_modules/pybn/operations.html#FactorMarginalization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.operations.FactorMarginalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factor Marginalization Sums given variables out of a factor.</p>
+<p><tt class="docutils literal"><span class="pre">B</span> <span class="pre">=</span> <span class="pre">FactorMarginalization(A,V)</span></tt> computes the factor with the variables
+in V summed out. The factor data structure has the following fields:</p>
+<blockquote>
+<div><ul class="simple">
+<li>.var    Vector of variables in the factor, e.g. [1 2 3]</li>
+<li>.card   Vector of cardinalities corresponding to .var, e.g. [2 2 2]</li>
+<li>.val    Value table of size prod(.card)</li>
+</ul>
+</div></blockquote>
+<p>The resultant factor should have at least one variable remaining or this
+function will throw an error.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first simple">
+<li>A (Factor): Factor A</li>
+<li>V (list): variables summed out</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>B (Factor): Return factor B</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="observe-evidence">
+<h3>6.1.3. Observe Evidence<a class="headerlink" href="#observe-evidence" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pybn.operations.ObserveEvidence">
+<em class="property">class </em><tt class="descclassname">pybn.operations.</tt><tt class="descname">ObserveEvidence</tt><a class="reference internal" href="_modules/pybn/operations.html#ObserveEvidence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.operations.ObserveEvidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Observe Evidence Modify a vector of factors given some evidence.</p>
+<p><tt class="docutils literal"><span class="pre">F</span> <span class="pre">=</span> <span class="pre">ObserveEvidence(F,</span> <span class="pre">E)</span></tt> sets all entries in the vector of factors, F,
+that are not consistent with the evidence, E, to zero. F is a vector of
+factors, each a data structure with the following fields:</p>
+<blockquote>
+<div><ul class="simple">
+<li>.var    Vector of variables in the factor, e.g. [1 2 3]</li>
+<li>.card   Vector of cardinalities corresponding to .var, e.g. [2 2 2]</li>
+<li>.val    Value table of size prod(.card)</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first last simple">
+<li>F (Factor): Factor F</li>
+<li>E (tuple):   E is an N-by-2 matrix, where each row consists of a variable/value pair.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Variables are in the first column and values are in the second column.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>F (Factor): Return factor F</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="compute-joint-distribution">
+<h3>6.1.4. Compute Joint Distribution<a class="headerlink" href="#compute-joint-distribution" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pybn.operations.ComputeJointDistribution">
+<em class="property">class </em><tt class="descclassname">pybn.operations.</tt><tt class="descname">ComputeJointDistribution</tt><a class="reference internal" href="_modules/pybn/operations.html#ComputeJointDistribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.operations.ComputeJointDistribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute Joint Distribution computes the joint distribution defined by a set
+of given factors</p>
+<p><tt class="docutils literal"><span class="pre">Joint</span> <span class="pre">=</span> <span class="pre">ComputeJointDistribution(F)</span></tt> computes the joint distribution
+defined by a set of given factors</p>
+<p>Joint is a factor that encapsulates the joint distribution given by F
+F is a vector of factors (struct array) containing the factors defining the
+distribution</p>
+</dd></dl>
+
+</div>
+<div class="section" id="compute-marginal">
+<h3>6.1.5. Compute Marginal<a class="headerlink" href="#compute-marginal" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pybn.operations.ComputeMarginal">
+<em class="property">class </em><tt class="descclassname">pybn.operations.</tt><tt class="descname">ComputeMarginal</tt><a class="reference internal" href="_modules/pybn/operations.html#ComputeMarginal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.operations.ComputeMarginal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute Marginal Computes the marginal over a set of given variables.</p>
+<p><tt class="docutils literal"><span class="pre">M</span> <span class="pre">=</span> <span class="pre">ComputeMarginal(V,</span> <span class="pre">F,</span> <span class="pre">E)</span></tt> computes the marginal over variables V
+in the distribution induced by the set of factors F, given evidence E</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first simple">
+<li>V (list): V is a list containing the variables in the marginal e.g. [1 2 3] for X_1, X_2 and X_3.</li>
+<li>F (list): F is a list of factors containing the factors defining the distribution</li>
+<li>E (tuple): E is an N-by-2 matrix, each row being a variable/value pair.</li>
+</ul>
+<p>Variables are in the first column and values are in the second column.</p>
+<p>If there is no evidence, pass in the empty matrix [] for E.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>M (Factor): M is a factor containing the marginal over variables V</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="assignment-to-index">
+<h3>6.1.6. Assignment to Index<a class="headerlink" href="#assignment-to-index" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pybn.operations.AssignmentToIndex">
+<em class="property">class </em><tt class="descclassname">pybn.operations.</tt><tt class="descname">AssignmentToIndex</tt><a class="reference internal" href="_modules/pybn/operations.html#AssignmentToIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.operations.AssignmentToIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>AssignmentToIndex Convert assignment to index.</p>
+<p><tt class="docutils literal"><span class="pre">I</span> <span class="pre">=</span> <span class="pre">AssignmentToIndex(A,</span> <span class="pre">D)</span></tt> converts an assignment, A, over variables
+with cardinality D to an index into the .val vector for a factor.
+If A is a matrix then the function converts each row of A to an index.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first simple">
+<li>A (list): assignment A.</li>
+<li>D (list): cardinality of the assignment</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>I (list): Returns a list I with indices correlated to the assignment</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="index-to-assignment">
+<h3>6.1.7. Index to Assignment<a class="headerlink" href="#index-to-assignment" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="pybn.operations.IndexToAssignment">
+<em class="property">class </em><tt class="descclassname">pybn.operations.</tt><tt class="descname">IndexToAssignment</tt><a class="reference internal" href="_modules/pybn/operations.html#IndexToAssignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pybn.operations.IndexToAssignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>IndexToAssignment Convert index to variable assignment.</p>
+<p><tt class="docutils literal"><span class="pre">A</span> <span class="pre">=</span> <span class="pre">IndexToAssignment(I,</span> <span class="pre">D)</span></tt> converts an index, I, into the .val vector
+into an assignment over variables with cardinality D. If I is a vector, 
+then the function produces a matrix of assignments, one assignment 
+per row.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Args :</th><td class="field-body"><ul class="first simple">
+<li>I (list): List of indices</li>
+<li>D (list): cardinality of the assignment</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns :</th><td class="field-body"><ul class="first last simple">
+<li>A (list): Returns the assignment A related to the indices I.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/Logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">6. Calculations</a><ul>
+<li><a class="reference internal" href="#factor">6.1. Factor</a><ul>
+<li><a class="reference internal" href="#factor-product">6.1.1. Factor Product</a></li>
+<li><a class="reference internal" href="#factor-marginalization">6.1.2. Factor Marginalization</a></li>
+<li><a class="reference internal" href="#observe-evidence">6.1.3. Observe Evidence</a></li>
+<li><a class="reference internal" href="#compute-joint-distribution">6.1.4. Compute Joint Distribution</a></li>
+<li><a class="reference internal" href="#compute-marginal">6.1.5. Compute Marginal</a></li>
+<li><a class="reference internal" href="#assignment-to-index">6.1.6. Assignment to Index</a></li>
+<li><a class="reference internal" href="#index-to-assignment">6.1.7. Index to Assignment</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="network.html"
+                        title="previous chapter">5. Bayesian Network</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="references.html"
+                        title="next chapter">7. List of References</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/calculations.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="references.html" title="7. List of References"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="network.html" title="5. Bayesian Network"
+             >previous</a> |</li>
+        <li><a href="index.html">PyBN 1.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Juergen Hackl.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

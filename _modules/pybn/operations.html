@@ -1,0 +1,484 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pybn.operations &mdash; PyBN 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="PyBN 1.0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../index.html">PyBN 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pybn.operations</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/python -tt</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.matlib</span>
+
+<div class="viewcode-block" id="Factor"><a class="viewcode-back" href="../../calculations.html#pybn.operations.Factor">[docs]</a><span class="k">class</span> <span class="nc">Factor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Factor</span>
+
+<span class="sd">  Factors are used to represent the CPDs in the Bayesian network. As such, the</span>
+<span class="sd">  core functionality, which are implemented, are the factor product, factor</span>
+<span class="sd">  marginalization and factor reduction operations.</span>
+
+<span class="sd">  :Attributes:</span>
+<span class="sd">    - name (str): Name of the factor</span>
+<span class="sd">    - var (list): List of variables in the factor, e.g. [1 2 3]</span>
+<span class="sd">    - card (list): List of cardinalities corresponding to .var, e.g. [2 2 2]</span>
+<span class="sd">    - val (list): Value table of size prod(card)</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">card</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="bp">None</span>
+
+  <span class="k">def</span> <span class="nf">getVar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">var</span>
+
+  <span class="k">def</span> <span class="nf">getCard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">card</span>
+
+  <span class="k">def</span> <span class="nf">getVal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+
+  <span class="k">def</span> <span class="nf">setVar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">var</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">setCard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">card</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">card</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">card</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">setVal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">val</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">card</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span><span class="n">card</span><span class="p">,</span><span class="n">val</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">card</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">card</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+</div>
+<div class="viewcode-block" id="FactorProduct"><a class="viewcode-back" href="../../calculations.html#pybn.operations.FactorProduct">[docs]</a><span class="k">def</span> <span class="nf">FactorProduct</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Factor Product Computes the product of two factors.</span>
+
+<span class="sd">  ``C.FactorProduct(A,B)`` computes the product between two factors, A and B,</span>
+<span class="sd">  where each factor is defined over a set of variables with given dimension.</span>
+<span class="sd">  The factor data structure has the following fields:</span>
+
+<span class="sd">    - .var    Vector of variables in the factor, e.g. [1 2 3]</span>
+<span class="sd">    - .card   Vector of cardinalities corresponding to .var, e.g. [2 2 2]</span>
+<span class="sd">    - .val    Value table of size prod(.card)</span>
+
+<span class="sd">  :Args:</span>
+<span class="sd">    - A (Factor): Factor A</span>
+<span class="sd">    - B (Factor): Factor B</span>
+
+<span class="sd">  :Returns:</span>
+<span class="sd">    - C (Factor): Return factor C</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">C</span> <span class="o">=</span> <span class="n">Factor</span><span class="p">()</span>
+  <span class="c"># Check for empty factors</span>
+  <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">var</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]):</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">B</span>
+    <span class="k">return</span> <span class="n">C</span>
+  <span class="k">if</span> <span class="n">B</span><span class="o">.</span><span class="n">var</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]):</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">A</span>
+    <span class="k">return</span> <span class="n">C</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="c"># Check that variables in both A and B have the same cardinality</span>
+    <span class="n">dummy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">var</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">var</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dummy</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]):</span>
+      <span class="k">print</span> <span class="s">&#39;Dimensionality mismatch in factors&#39;</span>
+
+    <span class="c"># Set the variables of C</span>
+    <span class="n">C</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">union1d</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">var</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">var</span><span class="p">)</span>
+
+    <span class="c"># Construct the mapping between variables in A and B and variables in C.</span>
+    <span class="c"># In the code below, we have that</span>
+    <span class="c">#    mapA(i) = j, if and only if, A.var(i) == C.var(j)</span>
+    <span class="c"># and similarly </span>
+    <span class="c">#    mapB(i) = j, if and only if, B.var(i) == C.var(j)</span>
+    <span class="c"># For example, if A.var = [3 1 4], B.var = [4 5], and C.var = [1 3 4 5],</span>
+    <span class="c"># then, mapA = [2 1 3] and mapB = [3 4]; mapA(1) = 2 because A.var(1) = 3</span>
+    <span class="c"># and C.var(2) = 3, so A.var(1) == C.var(2).</span>
+
+    <span class="n">dummy</span><span class="p">,</span> <span class="n">ixA</span> <span class="o">=</span> <span class="n">ismember</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">var</span><span class="p">,</span><span class="n">C</span><span class="o">.</span><span class="n">var</span><span class="p">)</span>
+    <span class="n">mapA</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">dummy</span><span class="p">])</span>
+    <span class="n">dummy</span><span class="p">,</span> <span class="n">ixB</span> <span class="o">=</span> <span class="n">ismember</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">var</span><span class="p">,</span><span class="n">C</span><span class="o">.</span><span class="n">var</span><span class="p">)</span>
+    <span class="n">mapB</span> <span class="o">=</span> <span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">dummy</span><span class="p">])</span>
+
+    <span class="c"># Set the cardinality of variables in C</span>
+    <span class="n">C</span><span class="o">.</span><span class="n">card</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">var</span><span class="p">))</span>
+    <span class="n">C</span><span class="o">.</span><span class="n">card</span><span class="p">[</span><span class="n">ixA</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">card</span>
+    <span class="n">C</span><span class="o">.</span><span class="n">card</span><span class="p">[</span><span class="n">ixB</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">card</span>
+
+    <span class="c"># Initialize the factor values of C:</span>
+    <span class="c">#   prod(C.card) is the number of entries in C</span>
+    <span class="n">C</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">card</span><span class="p">))</span>
+
+    <span class="c"># Compute some helper indices</span>
+    <span class="n">assignment</span> <span class="o">=</span> <span class="n">IndexToAssignment</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">card</span><span class="p">)),</span><span class="n">C</span><span class="o">.</span><span class="n">card</span><span class="p">)</span>
+    <span class="n">indxA</span> <span class="o">=</span>  <span class="n">AssignmentToIndex</span><span class="p">(</span><span class="n">assignment</span><span class="p">[:,</span><span class="n">ixA</span><span class="p">],</span> <span class="n">A</span><span class="o">.</span><span class="n">card</span><span class="p">)</span>
+    <span class="n">indxB</span> <span class="o">=</span>  <span class="n">AssignmentToIndex</span><span class="p">(</span><span class="n">assignment</span><span class="p">[:,</span><span class="n">ixB</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">card</span><span class="p">)</span>
+
+    <span class="c"># Correctly populate the factor values of C</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">card</span><span class="p">))):</span>
+      <span class="n">C</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="n">indxA</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">*</span><span class="n">B</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="n">indxB</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+
+    <span class="k">return</span> <span class="n">C</span>
+
+</div>
+<div class="viewcode-block" id="FactorMarginalization"><a class="viewcode-back" href="../../calculations.html#pybn.operations.FactorMarginalization">[docs]</a><span class="k">def</span> <span class="nf">FactorMarginalization</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">V</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Factor Marginalization Sums given variables out of a factor.</span>
+
+<span class="sd">  ``B = FactorMarginalization(A,V)`` computes the factor with the variables</span>
+<span class="sd">  in V summed out. The factor data structure has the following fields:</span>
+
+<span class="sd">    - .var    Vector of variables in the factor, e.g. [1 2 3]</span>
+<span class="sd">    - .card   Vector of cardinalities corresponding to .var, e.g. [2 2 2]</span>
+<span class="sd">    - .val    Value table of size prod(.card)</span>
+
+<span class="sd">  The resultant factor should have at least one variable remaining or this</span>
+<span class="sd">  function will throw an error.</span>
+
+<span class="sd">  :Args:</span>
+<span class="sd">    - A (Factor): Factor A</span>
+<span class="sd">    - V (list): variables summed out</span>
+
+<span class="sd">  :Returns:</span>
+<span class="sd">    - B (Factor): Return factor B</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="n">B</span> <span class="o">=</span> <span class="n">Factor</span><span class="p">()</span>
+
+  <span class="c"># Check for empty factors</span>
+  <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">var</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span> <span class="ow">and</span> <span class="n">V</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]):</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">A</span>
+    <span class="k">return</span> <span class="n">B</span>
+  <span class="k">else</span><span class="p">:</span>
+
+    <span class="c"># Construct the output factor over A.var \ V</span>
+    <span class="c"># (the variables in A.var that are not in V)</span>
+    <span class="c"># and mapping between variables in A and B</span>
+    <span class="n">B</span><span class="o">.</span><span class="n">var</span><span class="p">,</span> <span class="n">mapB</span> <span class="o">=</span> <span class="n">setdiff</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">var</span><span class="p">,</span><span class="n">V</span><span class="p">)</span>
+
+    <span class="c"># Check for empty resultant factor</span>
+    <span class="k">if</span> <span class="n">B</span><span class="o">.</span><span class="n">var</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]):</span>
+      <span class="k">print</span> <span class="s">&#39;Error: Resultant factor has empty scope&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+
+      <span class="c"># Initialize B.card and B.val</span>
+      <span class="n">B</span><span class="o">.</span><span class="n">card</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">card</span><span class="p">[</span><span class="n">mapB</span><span class="p">]</span>
+      <span class="n">B</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">card</span><span class="p">))</span>
+
+      <span class="c"># Compute some helper indices</span>
+      <span class="n">assignment</span> <span class="o">=</span> <span class="n">IndexToAssignment</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">card</span><span class="p">)),</span><span class="n">A</span><span class="o">.</span><span class="n">card</span><span class="p">)</span>
+      <span class="n">indxB</span> <span class="o">=</span>  <span class="n">AssignmentToIndex</span><span class="p">(</span><span class="n">assignment</span><span class="p">[:,</span><span class="n">mapB</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">card</span><span class="p">)</span>
+
+      <span class="c"># Correctly populate the factor values of B</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indxB</span><span class="p">))):</span>
+        <span class="n">B</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="n">indxB</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">A</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+      <span class="k">return</span> <span class="n">B</span>
+
+</div>
+<div class="viewcode-block" id="ObserveEvidence"><a class="viewcode-back" href="../../calculations.html#pybn.operations.ObserveEvidence">[docs]</a><span class="k">def</span> <span class="nf">ObserveEvidence</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Observe Evidence Modify a vector of factors given some evidence.</span>
+
+<span class="sd">  ``F = ObserveEvidence(F, E)`` sets all entries in the vector of factors, F,</span>
+<span class="sd">  that are not consistent with the evidence, E, to zero. F is a vector of</span>
+<span class="sd">  factors, each a data structure with the following fields:</span>
+
+<span class="sd">    - .var    Vector of variables in the factor, e.g. [1 2 3]</span>
+<span class="sd">    - .card   Vector of cardinalities corresponding to .var, e.g. [2 2 2]</span>
+<span class="sd">    - .val    Value table of size prod(.card)</span>
+
+<span class="sd">  :Args:</span>
+<span class="sd">    - F (Factor): Factor F</span>
+<span class="sd">    - E (tuple):   E is an N-by-2 matrix, where each row consists of a variable/value pair.\n </span>
+<span class="sd">  Variables are in the first column and values are in the second column.</span>
+
+<span class="sd">  :Returns:</span>
+<span class="sd">    - F (Factor): Return factor F</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="c"># Iterate through all evidence</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">E</span><span class="p">)[</span><span class="mi">0</span><span class="p">])):</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">E</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="c"># variable</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">E</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="c"># value</span>
+
+    <span class="c"># Check validity of evidence</span>
+    <span class="c"># if x == 0:</span>
+    <span class="c">#   print &#39;Warning: Evidence not set for variable&#39;</span>
+
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)):</span>
+      <span class="c"># Does factor contain variable?</span>
+      <span class="n">indx</span> <span class="o">=</span> <span class="n">indices</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="n">v</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">indx</span> <span class="o">!=</span> <span class="p">[]:</span>
+
+        <span class="c"># Check validity of evidence</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">card</span><span class="p">[</span><span class="n">indx</span><span class="p">]</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+          <span class="k">print</span> <span class="s">&#39;Error: Invalid evidence, X_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">+</span><span class="s">&#39; = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c"># Compute some helper indices</span>
+        <span class="n">assignment</span> <span class="o">=</span> <span class="n">IndexToAssignment</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">card</span><span class="p">)),</span><span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">card</span><span class="p">)</span>
+        <span class="n">idnxF</span> <span class="o">=</span> <span class="n">indices</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="c"># Factor F(j) to account for observed evidence</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">assignment</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">assignment</span><span class="p">)):</span>
+          <span class="k">if</span> <span class="n">assignment</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">idnxF</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x</span><span class="p">:</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">A</span><span class="p">,[</span><span class="n">assignment</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">SetValueOfAssignment</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">A</span><span class="p">,</span> <span class="mi">0</span><span class="p">,)</span>
+
+        <span class="c"># Check validity of evidence / resulting factor</span>
+        <span class="k">if</span> <span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]):</span>
+          <span class="k">print</span> <span class="s">&#39;Warning: Factor &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">+</span><span class="s">&#39; makes variable assignment impossible&#39;</span>
+  <span class="k">return</span> <span class="n">F</span>
+</div>
+<span class="k">def</span> <span class="nf">SetValueOfAssignment</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">VO</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">VO</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="c">#print A</span>
+    <span class="c">#print F.card</span>
+    <span class="n">indx</span> <span class="o">=</span> <span class="n">AssignmentToIndex</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">card</span><span class="p">)</span>
+    <span class="c"># print indx.astype(int)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="nb">map</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">var</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">var</span><span class="p">))):</span>
+      <span class="nb">map</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">indices</span><span class="p">(</span><span class="n">VO</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="n">F</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">indx</span> <span class="o">=</span> <span class="n">AssignmentToIndex</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="nb">map</span><span class="p">],</span> <span class="n">F</span><span class="o">.</span><span class="n">card</span><span class="p">)</span>
+  <span class="n">F</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="n">indx</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)]</span> <span class="o">=</span> <span class="n">v</span>
+
+  <span class="k">return</span> <span class="n">F</span>
+
+
+<div class="viewcode-block" id="ComputeJointDistribution"><a class="viewcode-back" href="../../calculations.html#pybn.operations.ComputeJointDistribution">[docs]</a><span class="k">def</span> <span class="nf">ComputeJointDistribution</span><span class="p">(</span><span class="n">F</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Compute Joint Distribution computes the joint distribution defined by a set</span>
+<span class="sd">  of given factors</span>
+
+<span class="sd">  ``Joint = ComputeJointDistribution(F)`` computes the joint distribution</span>
+<span class="sd">  defined by a set of given factors</span>
+
+<span class="sd">  Joint is a factor that encapsulates the joint distribution given by F</span>
+<span class="sd">  F is a vector of factors (struct array) containing the factors defining the</span>
+<span class="sd">  distribution</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="n">Joint</span> <span class="o">=</span> <span class="n">Factor</span><span class="p">()</span>
+  <span class="c"># Check for empty factor list</span>
+  <span class="k">if</span> <span class="n">F</span> <span class="o">==</span> <span class="p">[]:</span>
+    <span class="k">print</span> <span class="s">&#39;Error: empty factor list&#39;</span>
+  <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&#39;Error: only one factor&#39;</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">F</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+    <span class="n">Joint</span> <span class="o">=</span> <span class="n">FactorProduct</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">F</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="p">)):</span>
+        <span class="n">Joint</span> <span class="o">=</span> <span class="n">FactorProduct</span><span class="p">(</span><span class="n">Joint</span><span class="p">,</span><span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">Joint</span>
+
+</div>
+<div class="viewcode-block" id="ComputeMarginal"><a class="viewcode-back" href="../../calculations.html#pybn.operations.ComputeMarginal">[docs]</a><span class="k">def</span> <span class="nf">ComputeMarginal</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">E</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Compute Marginal Computes the marginal over a set of given variables.</span>
+
+<span class="sd">  ``M = ComputeMarginal(V, F, E)`` computes the marginal over variables V</span>
+<span class="sd">  in the distribution induced by the set of factors F, given evidence E</span>
+
+<span class="sd">  :Args:</span>
+<span class="sd">    - V (list): V is a list containing the variables in the marginal e.g. [1 2 3] for X_1, X_2 and X_3.</span>
+<span class="sd">    - F (list): F is a list of factors containing the factors defining the distribution</span>
+<span class="sd">    - E (tuple): E is an N-by-2 matrix, each row being a variable/value pair.\n</span>
+<span class="sd">    Variables are in the first column and values are in the second column.\n</span>
+<span class="sd">    If there is no evidence, pass in the empty matrix [] for E.</span>
+
+<span class="sd">  :Returns:</span>
+<span class="sd">    - M (Factor): M is a factor containing the marginal over variables V</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="c"># Compute the joint distirbution</span>
+  <span class="n">J</span> <span class="o">=</span> <span class="n">ComputeJointDistribution</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+
+  <span class="c"># Compute observed evidence</span>
+  <span class="n">E</span> <span class="o">=</span> <span class="n">ObserveEvidence</span><span class="p">([</span><span class="n">J</span><span class="p">],</span> <span class="n">E</span><span class="p">)</span>
+
+  <span class="c"># Returns a renormalized factor</span>
+  <span class="n">R</span> <span class="o">=</span> <span class="n">RenormalizeFactor</span><span class="p">(</span><span class="n">E</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+  <span class="c"># Store the results in a list</span>
+  <span class="n">M</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)):</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">R</span>
+    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">var</span><span class="p">)):</span>
+      <span class="k">if</span> <span class="n">R</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">!=</span> <span class="n">V</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">FactorMarginalization</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="p">[</span><span class="n">R</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="n">ii</span><span class="p">]])</span>
+    <span class="n">M</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">M</span>
+
+</div>
+<span class="k">def</span> <span class="nf">RenormalizeFactor</span><span class="p">(</span><span class="n">F</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">F</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]):</span>
+    <span class="k">print</span> <span class="s">&#39;Error: Factor is empty&#39;</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">val</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="nb">sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">val</span><span class="p">)):</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="nb">sum</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">F</span>
+
+
+<span class="k">def</span> <span class="nf">indices</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">if</span> <span class="n">func</span><span class="p">(</span><span class="n">val</span><span class="p">)]</span>
+
+
+<span class="k">def</span> <span class="nf">setdiff</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+    <span class="n">tf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tf</span><span class="p">)):</span>
+      <span class="k">if</span> <span class="n">tf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">tf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">tf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">a</span><span class="o">!=</span><span class="n">b</span><span class="p">)])[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">d</span><span class="p">,</span> <span class="n">index</span>
+
+
+<div class="viewcode-block" id="AssignmentToIndex"><a class="viewcode-back" href="../../calculations.html#pybn.operations.AssignmentToIndex">[docs]</a><span class="k">def</span> <span class="nf">AssignmentToIndex</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">D</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;AssignmentToIndex Convert assignment to index.</span>
+
+<span class="sd">  ``I = AssignmentToIndex(A, D)`` converts an assignment, A, over variables</span>
+<span class="sd">  with cardinality D to an index into the .val vector for a factor.</span>
+<span class="sd">  If A is a matrix then the function converts each row of A to an index.</span>
+
+<span class="sd">  :Args:</span>
+<span class="sd">    - A (list): assignment A.</span>
+<span class="sd">    - D (list): cardinality of the assignment</span>
+
+<span class="sd">  :Returns:</span>
+<span class="sd">    - I (list): Returns a list I with indices correlated to the assignment</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumprod</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span><span class="n">D</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])),(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="s">&#39;F&#39;</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">-</span><span class="mi">1</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matlib</span><span class="o">.</span><span class="n">repmat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumprod</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span><span class="n">D</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])),</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">A</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">I</span>
+
+</div>
+<span class="k">def</span> <span class="nf">ismember</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">tf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="c"># for newer versions of numpy</span>
+    <span class="c">#tf = np.array([i in b for i in a])</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">tf</span><span class="p">])</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="n">i</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">t</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">tf</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="p">,</span> <span class="n">index</span>
+
+
+<div class="viewcode-block" id="IndexToAssignment"><a class="viewcode-back" href="../../calculations.html#pybn.operations.IndexToAssignment">[docs]</a><span class="k">def</span> <span class="nf">IndexToAssignment</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">D</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  IndexToAssignment Convert index to variable assignment.</span>
+
+<span class="sd">  ``A = IndexToAssignment(I, D)`` converts an index, I, into the .val vector</span>
+<span class="sd">  into an assignment over variables with cardinality D. If I is a vector, </span>
+<span class="sd">  then the function produces a matrix of assignments, one assignment </span>
+<span class="sd">  per row.</span>
+
+<span class="sd">  :Args:</span>
+<span class="sd">    - I (list): List of indices</span>
+<span class="sd">    - D (list): cardinality of the assignment</span>
+
+<span class="sd">  :Returns:</span>
+<span class="sd">    - A (list): Returns the assignment A related to the indices I.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">I</span> <span class="o">=</span> <span class="n">I</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+  <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matlib</span><span class="o">.</span><span class="n">repmat</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">matlib</span><span class="o">.</span><span class="n">repmat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumprod</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span><span class="n">D</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])),</span> <span class="nb">len</span><span class="p">(</span><span class="n">I</span><span class="p">),</span><span class="mi">1</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">matlib</span><span class="o">.</span><span class="n">repmat</span><span class="p">(</span><span class="n">D</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">I</span><span class="p">),</span><span class="mi">1</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span>
+  <span class="k">return</span> <span class="n">A</span>
+
+</div>
+<span class="k">def</span> <span class="nf">intersect</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+  <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/Logo.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../../index.html">PyBN 1.0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Juergen Hackl.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
