@@ -193,7 +193,8 @@ class Network(object):
         nodeLen = m*n
         if len(node.getProbabilities()) != nodeLen:
           sys.exit("Error: Probabilities for '"+str(node)+"' doesn't match!\n       Len of probabilities should be "+str(nodeLen)+" but is "+str(len(node.getProbabilities())))
-        if sum(node.getProbabilities()) != n:
+        n = n+0.0
+        if str(sum(node.getProbabilities())) != str(n):
           print "Error: Probabilities for '"+str(node)+"' doesn't sum up to 1.0!"
           #sys.exit("Error: Probabilities for '"+str(node)+"' doesn't sum up to 1.0!")
 
