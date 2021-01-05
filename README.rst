@@ -2,14 +2,14 @@
 Python Bayesian Networks
 ************************
 
-:Date: September 2013
+:Date: January 2021
 :Authors: Jürgen Hackl
 :Contact: hackl.j@gmx.at
 :Web site: http://github.com/hackl/pybn
 :Documentation: http://hackl.github.io/pybn/
 :Copyright: This document has been placed in the public domain.
 :License: PyBN is released under the GNU General Public Licence.
-:Version: 1.0.1
+:Version: 1.0.2
 
 Note
 ----

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from operations import *
+from .operations import *
 from operator import mul
 
 class Network(object):
@@ -195,7 +195,7 @@ class Network(object):
           sys.exit("Error: Probabilities for '"+str(node)+"' doesn't match!\n       Len of probabilities should be "+str(nodeLen)+" but is "+str(len(node.getProbabilities())))
         n = n+0.0
         if str(sum(node.getProbabilities())) != str(n):
-          print "Error: Probabilities for '"+str(node)+"' doesn't sum up to 1.0!"
+          print("Error: Probabilities for '"+str(node)+"' doesn't sum up to 1.0!")
           #sys.exit("Error: Probabilities for '"+str(node)+"' doesn't sum up to 1.0!")
 
 
@@ -633,5 +633,5 @@ def repEmptySpace(string):
 def chunks(l, n):
   """ Yield successive n-sized chunks from l.
   """
-  for i in xrange(0, len(l), n):
+  for i in range(0, len(l), n):
     yield l[i:i+n]

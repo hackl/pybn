@@ -86,10 +86,10 @@ def main():
   net.computeBeliefs()
 
   # Print the results for each node
-  print 'Fu', Fu.getBeliefs()
-  print 'SP', SP.getBeliefs()
-  print 'St', St.getBeliefs()
-  print 'FM', FM.getBeliefs()
+  print('Fu', Fu.getBeliefs())
+  print('SP', SP.getBeliefs())
+  print('St', St.getBeliefs())
+  print('FM', FM.getBeliefs())
 
   # This is the standard boilerplate that calls the main() function.
 if __name__ == '__main__':
