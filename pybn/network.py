@@ -45,17 +45,17 @@ class Network(object):
       - name (str): Name of the Node
       - value (int): Number of stage which is observed. Starting with 0.
     """
-    for i in range(len(self.nodes)):
-      if name == str(self.nodes[i]):
-        var = self.nodes[i].getIdNum()
-        outcomes = self.nodes[i].getOutcomes()
+    for node in self.nodes:
+      if name == str(node):
+        var = node.getIdNum()
+        outcomes = node.getOutcomes()
         if type(value) is str:
-          for j in range(len(outcomes)):
-            if value == outcomes[j]:
+          for outcome in outcomes:
+            if value == outcome:
               val = j+1
         elif type(value) is int:
           val = value
-        self.evidence.append([var,val])
+        self.evidence.append([var,val])    
 
   def getEvidence(self):
     """Return information about the evidence
@@ -73,12 +73,12 @@ class Network(object):
     """Reset all values"""
     self.evidence = []
     self.marginal = None
-    for i in range(len(self.nodes)):
-      self.nodes[i].setBeliefs(self.nodes[i].getProbabilities())
-      self.nodes[i].setCard([])
-      var = np.append(self.nodes[i].getVar(),self.nodes[i].getArcConnectionId()).tolist()
-      self.nodes[i].setVar(var)
-      self.nodes[i].setVal(self.nodes[i].transformProbabilities())
+    for node in self.nodes:
+      node.setBeliefs(node.getProbabilities())
+      node.setCard([])
+      var = np.append(node.getVar(),node.getArcConnectionId()).tolist()
+      node.setVar(var)
+      node.setVal(node.transformProbabilities())
 
   def computeBeliefs(self):
     """Compute beliefs of the network"""
@@ -86,11 +86,11 @@ class Network(object):
     factors = []
     marginal = []
 
-    for i in range(len(self.nodes)):
+    for node in self.nodes:
       factor = Factor()
-      order.append(self.nodes[i].getIdNum())
-      self.nodes[i].setVal(self.nodes[i].transformProbabilities())
-      var, card, val = self.nodes[i].getInput()
+      order.append(node.getIdNum())
+      node.setVal(node.transformProbabilities())
+      var, card, val = node.getInput()
       factor.input(var,card,val)
       factors.append(factor)
 
@@ -127,13 +127,13 @@ class Network(object):
     """
     beliefs = []
     if vars != None:
-      for i in range(len(self.marginal)):
-        for j in range(len(vars)):
-          if str(self.marginal[i][0]) == vars[j]:
-            beliefs.append(self.marginal[i][1])
+      for mar in self.marginal:
+        for var in vars:
+          if str(mar[0]) == var:
+            beliefs.append(mar[1])
     else:
-      for i in range(len(self.marginal)):
-        beliefs.append(self.marginal[i][1])
+      for mar in self.marginal:
+        beliefs.append(mar[1])
     return beliefs
 
 
@@ -404,8 +404,8 @@ class Node(object):
 
   def getArcConnectionId(self):
     ids = []
-    for i in range(len(self.arcConnection)):
-      ids.append(self.arcConnection[i][1])
+    for connection in self.arcConnection:
+      ids.append(connection[1])
     return ids
 
   def addArcConnection(self,name,id,size):
@@ -423,8 +423,8 @@ class Node(object):
       size = (self.getSize(),1)
     else:
       n = 1
-      for i in range(len(self.arcConnection)):
-        n *= self.arcConnection[i][2]
+      for connection in self.arcConnection:
+        n *= connection[2]
       size = (self.getSize(),n)
     return size
 
@@ -440,8 +440,8 @@ class Node(object):
         card.append(self.getSize())
       else:
         card.append(self.getSize())
-        for i in range(len(self.arcConnection)):
-          card.append(self.arcConnection[i][2])
+        for connection in self.arcConnection:
+          card.append(connection[2])
     else:
       card = self.card.tolist()
     return card
@@ -469,15 +469,15 @@ class Node(object):
     initNode = '\t\t<cpt id="'+self.name+'" >\n'
     commentOutcomes = '\t\t\t<!-- setting names of outcomes -->\n'
     initOutcomes = ''
-    for outcomes in self.outcomes:
-      initOutcomes += '\t\t\t<state id="'+outcomes+'" />\n'
+    for outcome in self.outcomes:
+      initOutcomes += '\t\t\t<state id="'+outcome+'" />\n'
 
     if self.arcConnection != []:
       # print arc
       commentArc = '\t\t\t<!-- add arcs -->\n'
       initArc = '\t\t\t<parents>'
-      for i in range(len(self.arcConnection)):
-        initArc += self.arcConnection[i][0]+' '
+      for connection in self.arcConnection:
+        initArc += connection[0]+' '
       endArc =  '</parents>\n'
     else:
       commentArc = ''
